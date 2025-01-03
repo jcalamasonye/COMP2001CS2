@@ -1,0 +1,784 @@
+openapi: 3.0.0
+info:
+  title: Trail Management API
+  version: 1.0.0
+  description: API for managing trails, locations, trail views, and users.
+
+servers:
+  - url: "/api"
+    description: Local development server
+
+paths:
+  /trails:
+    get:
+      summary: Get all trails
+      operationId: "trail.get_all_trails"
+      tags:
+        - Trails
+      responses:
+        200:
+          description: A list of trails
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trail'
+    post:
+      summary: Create a new trail
+      operationId: "trail.create_trail"
+      tags:
+        - Trails
+      requestBody:
+        description: Trail data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trail'
+      responses:
+        201:
+          description: Trail created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trail'
+
+  /trails/{trail_id}:
+    put:
+      summary: Update a trail by ID
+      operationId: "trail.update_trail"
+      tags:
+        - Trails
+      parameters:
+        - name: trail_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated trail data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrailUpdate'
+      responses:
+        200:
+          description: Trail updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trail'
+    delete:
+      summary: Delete a trail by ID
+      operationId: "trail.delete_trail"
+      tags:
+        - Trails
+      parameters:
+        - name: trail_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Trail deleted successfully
+
+  /locations:
+    get:
+      summary: Get all locations
+      operationId: "location.get_all_locations"
+      tags:
+        - Locations
+      responses:
+        200:
+          description: A list of locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+    post:
+      summary: Create a new location
+      operationId: "location.create_location"
+      tags:
+        - Locations
+      requestBody:
+        description: Location data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+      responses:
+        201:
+          description: Location created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+
+  /locations/{location_id}:
+    put:
+      summary: Update a location by ID
+      operationId: "location.update_location"
+      tags:
+        - Locations
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated location data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationUpdate'
+      responses:
+        200:
+          description: Location updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+    delete:
+      summary: Delete a location by ID
+      operationId: "location.delete_location"
+      tags:
+        - Locations
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Location deleted successfully
+  /trail_views:
+    get:
+      summary: Get all trail views
+      operationId: "trail_view.get_all_trail_views"
+      tags:
+        - Trail Views
+      responses:
+        200:
+          description: A list of trail views
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrailView'
+    post:
+      summary: Create a new trail view
+      operationId: "trail_view.create_trail_view"
+      tags:
+        - Trail Views
+      requestBody:
+        description: Trail view data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrailView'
+      responses:
+        201:
+          description: Trail view created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrailView'
+
+  /trail_views/{view_id}:
+    put:
+      summary: Update a trail view by ID
+      operationId: "trail_view.update_trail_view"
+      tags:
+        - Trail Views
+      parameters:
+        - name: view_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated trail view data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrailViewUpdate'
+      responses:
+        200:
+          description: Trail view updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrailView'
+    delete:
+      summary: Delete a trail view by ID
+      operationId: "trail_view.delete_trail_view"
+      tags:
+        - Trail Views
+      parameters:
+        - name: view_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Trail view deleted successfully
+
+  /trail_logs:
+    get:
+      summary: Get all trail logs
+      description: Retrieve a list of all trail logs.
+      operationId: "trail_logs.get_all_trail_logs"
+      tags:
+      - Trail Logs
+      responses:
+        '200':
+          description: A list of trail logs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrailLogCreate'
+        '404':
+          description: No trail logs found.
+    post:
+      summary: Create a new trail log
+      description: Add a new trail log entry.
+      operationId: "trail_logs.create_trail_log"
+      tags:
+      - Trail Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrailLogCreate'
+      responses:
+        '201':
+          description: Trail log created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrailLogCreate'
+        '400':
+          description: Missing required fields or invalid data.
+        '500':
+          description: Internal server error.
+
+  /trail_logs/by_id/{log_id}:
+    get:
+      summary: Get a trail log by ID
+      description: Retrieve a specific trail log by its ID.
+      operationId: "trail_logs.get_trail_log"
+      tags:
+      - Trail Logs
+      parameters:
+        - name: log_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the trail log to retrieve.
+      responses:
+        '200':
+          description: A single trail log.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrailLogCreate'
+        '404':
+          description: Trail log not found.
+        '500':
+          description: Internal server error.
+  /trail_logs/{log_id}:
+    put:
+      summary: Update a trail log by ID
+      description: Update the details of a trail log.
+      operationId: "trail_logs.update_trail_log"
+      tags:
+      - Trail Logs
+      parameters:
+        - name: log_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the trail log to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrailLogUpdate'
+      responses:
+        '200':
+          description: Trail log updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrailLog'
+        '400':
+          description: Invalid data or no data provided.
+        '500':
+          description: Internal server error.
+
+  /trail_logs/{log_id}:
+    delete:
+      summary: Delete a trail log by ID
+      description: Remove a specific trail log.
+      operationId: "trail_logs.delete_trail_log"
+      tags:
+      - Trail Logs
+      parameters:
+        - name: log_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the trail log to delete.
+      responses:
+        '200':
+          description: Trail log deleted successfully.
+        '404':
+          description: Trail log not found.
+        '500':
+          description: Internal server error.
+
+  /users:
+    get:
+      summary: Get all users
+      operationId: "user.get_all_users"
+      tags:
+        - Users
+      responses:
+        200:
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      operationId: "user.create_user"
+      tags:
+        - Users
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/login:
+    post:
+      summary: User login
+      operationId: "user.login_user"
+      tags:
+       - Users
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+           schema:
+             $ref: '#/components/schemas/UserLogin'
+      responses:
+        200:
+          description: User login successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLogin'
+      
+  /users/update/{user_id}:
+    put:
+      summary: Update a user by ID
+      operationId: "user.update_user"
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated user data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{user_id}:
+    delete:
+      summary: Delete a user by ID
+      operationId: "user.delete_user"
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: User deleted successfully
+
+
+openapi: 3.0.0
+info:
+  title: Example API
+  version: 1.0.0
+components:
+  schemas:
+    # Location Schemas
+    Location:
+      type: object
+      properties:
+        location_id:
+          type: string
+          description: Unique ID for the location.
+          maxLength: 8
+        specific_location:
+          type: string
+          description: Specific location details.
+          maxLength: 100
+        city:
+          type: string
+          description: City name.
+          maxLength: 50
+        county:
+          type: string
+          description: County name.
+          maxLength: 50
+        country:
+          type: string
+          description: Country name.
+          maxLength: 50
+      required:
+        - location_id
+      example:
+        location_id: "LOC12345"
+        specific_location: "123 Main Street"
+        city: "Lagos"
+        county: "Ikeja"
+        country: "Nigeria"
+
+    LocationUpdate:
+      type: object
+      properties:
+        specific_location:
+          type: string
+          description: Updated specific location details.
+          maxLength: 100
+        city:
+          type: string
+          description: Updated city name.
+          maxLength: 50
+        county:
+          type: string
+          description: Updated county name.
+          maxLength: 50
+        country:
+          type: string
+          description: Updated country name.
+          maxLength: 50
+      example:
+        specific_location: "456 New Street"
+        city: "Abuja"
+        county: "Gwarinpa"
+        country: "Nigeria"
+
+    # TrailView Schemas
+    TrailView:
+      type: object
+      properties:
+        view_id:
+          type: string
+          description: Unique ID for the trail view.
+          maxLength: 8
+        trail_id:
+          type: string
+          description: ID of the associated trail.
+          maxLength: 10
+        user_id:
+          type: string
+          description: ID of the user viewing the trail.
+          maxLength: 8
+        view_type:
+          type: string
+          description: Type of view.
+          maxLength: 50
+        terrain_type:
+          type: string
+          description: Type of terrain.
+          maxLength: 30
+      required:
+        - view_id
+        - trail_id
+        - terrain_type
+      example:
+        view_id: "VIEW1234"
+        trail_id: "TRAIL6789"
+        user_id: "USER5678"
+        view_type: "Panoramic View"
+        terrain_type: "Mountain"
+
+    TrailViewUpdate:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: Updated ID of the user viewing the trail.
+          maxLength: 8
+        view_type:
+          type: string
+          description: Updated type of view.
+          maxLength: 50
+        terrain_type:
+          type: string
+          description: Updated type of terrain.
+          maxLength: 30
+      example:
+        user_id: "USER1234"
+        view_type: "Close-up View"
+        terrain_type: "Desert"
+
+    # Trail Schemas
+    Trail:
+      type: object
+      properties:
+        trail_id:
+          type: string
+          description: Unique ID for the trail.
+          maxLength: 10
+        trail_name:
+          type: string
+          description: Name of the trail.
+          maxLength: 50
+        location_id:
+          type: string
+          description: ID of the associated location.
+          maxLength: 8
+        difficulty:
+          type: string
+          description: Difficulty level of the trail.
+          maxLength: 20
+        distance:
+          type: number
+          format: float
+          description: Distance of the trail in kilometers.
+        duration:
+          type: string
+          description: Duration to complete the trail in HH:MM format.
+          maxLength: 5
+        elevation_gain:
+          type: number
+          format: float
+          description: Elevation gain in meters.
+        route_type:
+          type: string
+          description: Type of route.
+          maxLength: 20
+      required:
+        - trail_id
+        - trail_name
+        - location_id
+        - difficulty
+      example:
+        trail_id: "TRAIL001"
+        trail_name: "Mount Everest Base Camp"
+        location_id: "LOC00123"
+        difficulty: "Hard"
+        distance: 130.5
+        duration: "12:30"
+        elevation_gain: 5400.5
+        route_type: "Out-and-back"
+
+    TrailUpdate:
+      type: object
+      properties:
+        trail_name:
+          type: string
+          description: Updated name of the trail.
+          maxLength: 50
+        location_id:
+          type: string
+          description: Updated ID of the associated location.
+          maxLength: 8
+        difficulty:
+          type: string
+          description: Updated difficulty level of the trail.
+          maxLength: 20
+        distance:
+          type: number
+          format: float
+          description: Updated distance of the trail in kilometers.
+        duration:
+          type: string
+          description: Updated duration to complete the trail in HH:MM format.
+          maxLength: 5
+        elevation_gain:
+          type: number
+          format: float
+          description: Updated elevation gain in meters.
+        route_type:
+          type: string
+          description: Updated type of route.
+          maxLength: 20
+      example:
+        trail_name: "Everest Advanced Base Camp"
+        location_id: "LOC00234"
+        difficulty: "Extreme"
+        distance: 150.0
+        duration: "15:00"
+        elevation_gain: 6000.0
+        route_type: "Loop"
+
+    # TrailLog Schemas
+    TrailLogCreate:
+      type: object
+      properties:
+        trail_id:
+          type: integer
+          description: ID of the associated trail.
+        added_by:
+          type: string
+          description: Name of the person who added the log.
+          maxLength: 100
+      required:
+        - trail_id
+        - added_by
+      example:
+        trail_id: 101
+        added_by: "John Doe"
+
+    TrailLogUpdate:
+      type: object
+      properties:
+        trail_id:
+          type: integer
+          description: Updated ID of the associated trail.
+        added_by:
+          type: string
+          description: Updated name of the person who added the log.
+          maxLength: 100
+      example:
+        trail_id: 102
+        added_by: "Jane Smith"
+
+    # User Schemas
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: Unique ID for the user.
+          maxLength: 8
+        user_name:
+          type: string
+          description: Name of the user.
+          maxLength: 225
+        email:
+          type: string
+          description: Email of the user.
+          maxLength: 225
+        password:
+          type: string
+          description: Password of the user.
+          maxLength: 225
+        phone_number:
+          type: integer
+          description: Phone number of the user.
+      required:
+        - user_id
+        - email
+        - password
+      example:
+        user_id: "USER1234"
+        user_name: "Alice Johnson"
+        email: "alice@example.com"
+        password: "MyPass"
+        phone_number: 1234567890
+        
+
+    UserUpdate:
+      type: object
+      properties:
+        user_name:
+          type: string
+          description: Updated name of the user.
+          maxLength: 225
+        email:
+          type: string
+          description: Updated email of the user.
+          maxLength: 225
+        phone_number:
+          type: integer
+          description: Updated phone number of the user.
+      example:
+        user_name: "Alice J."
+        email: "alice.j@example.com"
+        phone_number: 9876543210
+
+
+    UserLogin:
+      type: object
+      properties:
+        user_name:
+          type: string
+          description: Login Credentials.
+          maxLength: 225
+        email:
+          type: string
+          description: email of the user.
+          maxLength: 225
+        password:
+          type: string
+          description: Password of the user.
+      example:
+        password: "Alice J"
+        email: "alice.j@example.com"
+        
+
+    # UserLogin:
+    #   type: object
+    #   properties:
+    #     email:
+    #       type: string
+    #       format: email
+    #       example: user@example.com
+    #     password:
+    #       type: string
+    #       format: password
+    #       example: password123
