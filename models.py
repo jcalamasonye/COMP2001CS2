@@ -51,14 +51,14 @@ class TrailView(db.Model):
     __tablename__ = "trail_view"
 
     view_id = db.Column(db.String(8), primary_key=True, unique=True, nullable=False)
-    trail_id = db.Column(db.String(10), db.ForeignKey("trail.trail_id"), nullable=False, unique=True)  # Ensuring one-to-one relation
+    trail_id = db.Column(db.String(10), db.ForeignKey("trail.trail_id"), nullable=False, unique=True)
     user_id = db.Column(db.String(8), db.ForeignKey("user.user_id"), nullable=True)
     view_type = db.Column(db.String(50), nullable=True)
     terrain_type = db.Column(db.String(30), nullable=True)
     timestamp = db.Column(
         db.DateTime,
-        default=lambda: datetime.now(pytz.timezone('Europe/London')),
-        onupdate=lambda: datetime.now(pytz.timezone('Europe/London'))
+        default=lambda: datetime.now(pytz.timezone("Europe/London")),
+        onupdate=lambda: datetime.now(pytz.timezone("Europe/London")),
     )
 
     def __init__(self, **kwargs):
@@ -73,6 +73,7 @@ class TrailView(db.Model):
             self.view_type = self.view_type.title()
         if self.terrain_type:
             self.terrain_type = self.terrain_type.title()
+
 
 
 class TrailViewSchema(ma.SQLAlchemyAutoSchema):
@@ -90,21 +91,21 @@ trail_views_schema = TrailViewSchema(many=True)
 class Trail(db.Model):
     __tablename__ = "trail"
 
-    trail_id = db.Column(db.String(10), primary_key=True, unique=True, nullable=False)
-    trail_name = db.Column(db.String(50), nullable=False)
+    trail_id = db.Column(db.String(10), primary_key=True)  # Ensure trail_id is a primary key
+    trail_name = db.Column(db.String(255), nullable=False)
     location_id = db.Column(db.String(8), db.ForeignKey('location.location_id'), nullable=False)
-    difficulty = db.Column(db.String(20), nullable=False)
-    distance = db.Column(db.Float, nullable=True)  # Distance in kilometers
+    difficulty = db.Column(db.String(50), nullable=False)
+    distance = db.Column(db.Float, nullable=False)
     duration = db.Column(db.String(5), nullable=True)  # Format HH:MM
-    elevation_gain = db.Column(db.Float, nullable=True)  # Elevation in meters
+    elevation_gain = db.Column(db.Float, nullable=True)
     route_type = db.Column(db.String(20), nullable=True)
     timestamp = db.Column(
         db.DateTime,
-        default=lambda: datetime.now(pytz.timezone('Europe/London')),
-        onupdate=lambda: datetime.now(pytz.timezone('Europe/London'))
+        default=lambda: datetime.now(pytz.timezone("Europe/London")),
+        onupdate=lambda: datetime.now(pytz.timezone("Europe/London")),
     )
 
-    # Relationship to Location
+    # Relationships
     location = db.relationship("Location", backref="trails", lazy=True)
 
     # Relationship to TrailView (one-to-one)
@@ -122,6 +123,7 @@ class Trail(db.Model):
             allowed_difficulties = {"Easy", "Moderate", "Hard"}
             if self.difficulty not in allowed_difficulties:
                 raise ValueError(f"Difficulty must be one of {allowed_difficulties}")
+
 
 
 class TrailSchema(ma.SQLAlchemyAutoSchema):
